@@ -1,0 +1,212 @@
+// MinHeap class
+
+public class minHeap {
+    private int[] heap;
+    private int size;
+    
+    public minHeap(int capacity) {
+        this.heap = new int[capacity];
+        this.size = 0;
+    }
+    
+    public void insert(int x) {
+        if (size == heap.length) {
+            return;
+        }
+        heap[size] = x;
+        swim(size);
+        size++;
+    }
+    
+    private void swim(int idx) {
+        while (idx > 0 && heap[idx] < heap[parent(idx)]) {
+            swap(idx, parent(idx));
+            idx = parent(idx);
+        }
+    }
+    public int parent(int idx){
+        return (idx -1)/2;
+    }
+    private void swap(int i, int j) {
+        int temp = heap[i];
+        heap[i] = heap[j];
+        heap[j] = temp;
+    }
+    
+    public int extractMin() {
+        if (size == 0) {
+            return 0;
+        }
+        int min = heap[0];
+        heap[0] = heap[size - 1];
+        size--;
+        sink(0);
+        return min;
+    }
+    
+    private void sink(int idx) {
+        int current = idx;
+        
+        while (true) {
+            int left = 2 * current + 1;
+            int right = 2 * current + 2;
+            int smallest = current;
+            
+            if (left < size && heap[left] < heap[smallest]) {
+                smallest = left;
+            }
+            if (right < size && heap[right] < heap[smallest]) {
+                smallest = right;
+            }
+            
+            if (smallest == current) {
+                break;
+            }
+            
+            swap(current, smallest);
+            current = smallest;
+        }
+    }
+    public int[] heapSort(){
+        minHeap temp = new minHeap(size);
+        for(int i=0; i<size; i++){
+            temp.insert(heap[i]);
+        }
+        int[] sorted = new int[size];
+        for(int i=0; i< sorted.length; i++){
+            sorted[i] = temp.extractMin();
+        }
+        return sorted;
+    }
+
+}
+
+// MaxHeap Class
+
+public class maxHeap {
+    private int[] heap;
+    private int size;
+    
+    public maxHeap(int capacity) {
+        heap = new int[capacity];
+        this.size = 0;
+    }
+    
+    public void insert(int x) {
+        if (size == heap.length) return;
+        heap[size] = x;
+        swim(size);
+        size++;
+    }
+    
+    public void swim(int current) {
+        while (current > 0 && heap[current] > heap[parent(current)]) {
+            swap(current, parent(current));
+            current = parent(current);
+        }
+    }
+    
+    private void swap(int i, int j) {
+        int temp = heap[i];
+        heap[i] = heap[j];
+        heap[j] = temp;
+    }
+    
+    private int parent(int idx) {
+        return (idx - 1) / 2;
+    }
+    
+    public int extractMax() {
+        if (size == 0) return 0;
+        int max = heap[0];
+        swap(0, size - 1);
+        size--;
+        sink(0);
+        return max;
+    }
+    
+    public void sink(int current) {
+        while (true) {
+            int max = current;
+            int left = 2 * current + 1;
+            int right = 2 * current + 2;
+            
+            if (left < size && heap[max] < heap[left]) {
+                max = left;
+            }
+            if (right < size && heap[max] < heap[right]) {
+                max = right;
+            }
+            
+            if (max == current) break;
+            
+            swap(current, max);
+            current = max;
+        }
+    }
+    public int[] heapSort(){
+        maxHeap temp = new maxHeap(size);
+        for(int i=0; i<size; i++){
+            temp.insert(heap[i]);
+        }
+        int[] sorted = new int[size];
+        for(int i=0; i< sorted.length; i++){
+            sorted[i] = temp.extractMax();
+        }
+        return sorted;
+    }
+}
+
+// Driver Code
+public class driver{
+    public static void main(String[]args){
+        int[] arr = {2,4,7,1,6};
+        int[] nums = {4, 10, 2, 8, 6, 7};
+        
+        int[] result = task4(arr, 4);
+
+        System.out.println("Task 4: ");
+        for(int i=0; i<result.length; i++){
+            System.out.print(result[i] + " ");
+        }
+        System.out.println();
+        System.out.println("Task 5: ");
+
+        int[] result_2 = task5(nums, 3);
+        for(int i=0; i<result_2.length; i++){
+            System.out.print(result_2[i] + " ");
+        }
+    }
+    
+    public static int[] task4(int[] tasks, int m) {
+        minHeap heap = new minHeap(m);
+
+        for(int i=0; i<m; i++){
+            heap.insert(0);
+        }
+        for (int i = 0; i < tasks.length; i++) {
+            int minLoad = heap.extractMin();
+            heap.insert(minLoad + tasks[i]);
+        }
+        
+        int[] machine = new int[m];
+        for (int i = 0; i < m; i++) {
+            machine[i] = heap.extractMin();
+        }
+        return machine;
+    }
+
+     public static int[] task5(int[] arr, int k){
+        maxHeap heap = new maxHeap(arr.length);
+
+        for(int i=0; i<arr.length; i++){
+            heap.insert(arr[i]);
+        }
+
+        int[] largestK = new int[k];
+        for(int i=0; i<k; i++){
+            largestK[i] = heap.extractMax();
+        }
+        return largestK;
+    }
+}
