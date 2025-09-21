@@ -1,1 +1,122 @@
+// CSE 220 : Assignment 1
 
+// Task 1
+
+public static void mostWater( Integer[] height ){
+        int water = 0;
+        int n = height.length;
+        int left = 0, right = n-1;
+        while(left<right){
+            int minHeight = Min(height[left], height[right]);
+            int newVol = Length(left, right)*minHeight;
+            water = Max(water, newVol);
+            if(height[left] < height[right]){
+                left++;
+            }
+            else{
+                right--;
+            }
+        }
+        System.out.println(water);
+    }
+    public static int Max(int a, int b){
+        if(a >=b){
+            return a;
+        }
+        else{
+            return b;
+        }
+    }
+    public static int Min(int a, int b){
+        if(a<= b){
+            return a;
+        }
+        else{
+            return b;
+        }
+    }
+    public static int Length(int a, int b){
+        if(a>=b){
+            return (a-b);
+        }
+        else{
+            return (b-a);
+        }
+    }
+
+// task 2 
+
+public static Integer rowRotation( Integer examWeek, String[][] matrix ){
+        int n = matrix.length;
+        int m = matrix[0].length;
+        examWeek = (examWeek-1)%n;
+        String[][] newarr = new String[n][m];
+        for(int j=0; j<m; j++){
+            for(int i=0; i<n; i++){
+                int idx = (i+examWeek)%n;
+                newarr[idx][j] = matrix[i][j];
+            }
+        }
+        Print(newarr, examWeek);
+        return examWeek;
+    }
+    public static void Print(String[][] matrix, Integer examweek){
+        for(int i=0; i<matrix.length; i++){
+            for(int j=0; j<matrix[0].length; j++){
+                if(matrix[i][j].length()==1){
+                    System.out.print("|  " + matrix[i][j] + "  ");
+                }
+                else{
+                    System.out.print("|  " + matrix[i][j] + " ");
+                }
+            }
+            System.out.print("|");
+            System.out.println();
+        }
+    }
+
+// task 3 
+
+public static Integer[][] compressMatrix( Integer[][] matrix ){
+
+        int n = matrix.length, m = matrix[0].length;
+        Integer[][] newarr = new Integer[n/2][m/2];
+        for(int i=0; i<n; i=i+2){
+            for(int j=0; j<m; j=j+2){
+                newarr[i/2][j/2] = matrix[i][j] + matrix[i+1][j] + matrix[i][j+1] + matrix[i+1][j+1];
+            }
+        }
+        return newarr;
+    }
+
+// task 4
+
+public static void playGame( Integer[][] arena ){
+        int n = arena.length, m = arena[0].length;
+        int count=0;
+        for(int i=0; i<n; i++){
+            for(int j=0; j<m; j++){
+                if(arena[i][j]%50==0 && arena[i][j]!=0){
+                    if(i+1<n && arena[i+1][j] ==2){
+                        count+= 2;
+                    } 
+                    if(i-1>=0 && arena[i-1][j] ==2){
+                        count+=2;
+                    }
+                    if(j+1<m && arena[i][j+1] == 2 ){
+                        count+= 2;
+                    }
+                    if(j-1>=0 && arena[i][j-1] == 2){
+                        count+=2;
+                    }
+                }
+            }
+        }
+
+        if(count<10){
+            System.out.println("Points Gained: " + count + ". Your team is out");
+        }
+        else{
+            System.out.println("Points Gained: " + count + ". Your team has survived the game");
+        }
+    }
