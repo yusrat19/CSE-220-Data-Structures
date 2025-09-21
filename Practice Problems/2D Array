@@ -1,0 +1,719 @@
+// reverse array 
+
+ public static void reverseArray(int[] arr){
+        int left = 0, right = arr.length - 1;
+        while(left < right){
+            int temp = arr[left];
+            arr[left] = arr[right];
+            arr[right] = temp;
+            right --;
+            left ++;
+        }
+    }
+// spiral matrix traversal
+
+public static int[] sprialOrderCC(int[][] arr){ // clock wise spiral
+       int m = arr.length, n = arr[0].length;
+       int[] sp= new int[m*n];
+       int left = 0, right = n-1, bottom = m-1, top=0, idx = 0;
+       while(left<=right && top<=bottom){
+            for(int i=left; i<=right; i++){
+                sp[idx++]= arr[top][i];
+            }
+            top++;
+            for(int i=top; i<=bottom; i++){
+                sp[idx++] = arr[i][right];
+            }
+            right--;
+            if(top<=bottom){
+                for(int i=right; i>=left; i--){
+                    sp[idx++] = arr[bottom][i];
+                }
+                bottom--;
+            }
+            if(left<=right){
+                for(int i=bottom; i>=top; i--){
+                    sp[idx++] = arr[i][left];
+                }
+                left++;
+            }
+       }
+       return sp;
+    }
+    public static int[] sprialOrderCCW(int[][] arr){    // counter clock wise sprial
+        int m = arr.length, n = arr[0].length;
+        int[] spi = new int[m*n];
+        int top=0, bottom = m-1, left = 0, right = n-1, idx=0;
+        while(left<=right && top<=bottom){
+            for(int i=top; i<=bottom; i++){
+                spi[idx++] = arr[i][left];
+            }
+            left++;
+            for(int i=left;i<=right; i++){
+                spi[idx++] = arr[bottom][i];
+            }
+            bottom--;
+            // traverse top
+            if(left<=right){
+                for(int i=bottom; i>=top; i--){
+                    spi[idx++] = arr[i][right];
+                }
+                right--;
+            }
+            // traverse left
+            if(top<=bottom){
+                for(int i=right; i>=left; i--){
+                    spi[idx++] = arr[top][i];
+                }
+                top++;
+            }
+        }
+        return spi;
+    }
+// find kth element in a spiral matrix
+
+    int findK(int arr[][], int n, int m, int k) {
+        // Your code here
+        //int[] newarr = new int[m*n];
+        int top=0, bottom = n-1, left = 0, right = m-1, idx=0;
+        while(left<=right && top<=bottom){
+            for(int i=left; i<=right; i++){
+                idx++;
+                if(idx==k){
+                    return arr[top][i];
+                }
+            }
+            top++;
+            for(int i=top; i<=bottom; i++){
+                idx++;
+                if(idx==k){
+                    return arr[i][right];
+                }
+            }
+            right--;
+            if(left<=right){
+                for(int i=right; i>=left; i--){
+                    idx++;
+                    if(idx==k){
+                    return arr[bottom][i];
+                    }
+                }
+                bottom--;
+            }
+            if(top<=bottom){
+                for(int i=bottom; i>=top; i--){
+                    idx++;
+                    if(idx==k){
+                        return arr[i][left];
+                    }
+                }
+                left++;
+            }
+            
+        }
+        return -1;
+    }
+
+// rotate matrix clockwise
+
+int[][] rotateMatrix(int M, int N, int mat[][]) {
+        // code here
+        int left =0, right = N-1, top = 0, bottom = M-1;
+        int current = 0;
+        while(left<right && top<bottom){
+            int prev = mat[top + 1][left];
+            
+            for(int i=left; i<=right; i++){
+                current = mat[top][i];
+                mat[top][i] = prev;
+                prev = current;
+            }
+            top++;
+            for(int i=top; i<=bottom; i++){
+                current = mat[i][right];
+                mat[i][right] = prev;
+                prev = current;
+            }
+            right --;
+            for(int i=right; i>=left; i--){
+                current = mat[bottom][i];
+                mat[bottom][i] = prev;
+                prev = current;
+            }
+            bottom--;
+            for(int i=bottom; i>=top; i--){
+                current = mat[i][left];
+                mat[i][left] = prev;
+                prev = current;
+            }
+            left++;
+        }
+        return mat;
+        
+    }
+// Rotate matrix by 90 degree (clockwise)
+
+  static void rotate(int arr[][]) {
+        // Code Here
+        int n = arr.length;
+        for(int i=0; i< arr.length; i++){
+            for(int j=i; j< arr[0].length; j++){
+                int temp = arr[i][j];
+                arr[i][j] = arr[j][i];
+                arr[j][i] = temp;
+            }
+        }
+        for(int i=0; i<arr.length; i++){
+            for(int j=0; j< (arr[0].length)/2; j++){
+                int temp = arr[i][j];
+                arr[i][j] = arr[i][n-1-j];
+                arr[i][n-1-j] = temp;
+            }
+        }
+        
+    }
+// Rotate matrix by 90 degree (Anti-clockwise)
+
+class Solution {
+    public void rotateMatrix(int[][] mat) {
+        // code here
+        int n = mat.length;
+        for(int i=0; i<mat.length; i++){
+            for(int j=i; j<mat[0].length; j++){
+                int temp = mat[i][j];
+                mat[i][j] = mat[j][i];
+                mat[j][i] = temp;
+            }
+        }
+        for(int j=0; j<mat[0].length; j++){
+            for(int i=n-1; i >= mat.length/2; i--){
+                int temp = mat[i][j];
+                mat[i][j] = mat[n-1-i][j];
+                mat[n-1-i][j] = temp;
+            }
+        }
+    }
+}s
+
+// Sort a 2D vector diagonally
+Given an NxM 2D matrix, rearrange such that 
+Each diagonal in the lower left triangle of the rectangular grid is sorted in ascending order. 
+Each diagonal in the upper right triangle of the rectangular grid is sorted in descending order. 
+The major diagonal in the grid starting from the top-left corner is not rearranged. 
+
+// User function Template for Java
+import java.util.Arrays;
+class Solution {
+    void diagonalSort(int matrix[][], int n, int m) {
+        // code here
+        // column wise traversal for upper triangle
+        for(int col=1; col<m; col++){
+            int len = Math.min(n, m-col);
+            int[] temp = new int[len];
+            for(int i=0; i<len; i++){
+                temp[i] = matrix[i][col+i];
+            }
+            Arrays.sort(temp);
+            reverse(temp);
+            for(int i=0; i<len; i++){
+                matrix[i][col+i] = temp[i];
+            }
+        }
+        // row wise traversal for lower triangle
+        for(int row=1; row<n; row++){
+            int len = Math.min(m, n-row);
+            int[] temp = new int[len];
+            for(int i=0; i<len; i++){
+                temp[i] = matrix[row+i][i];
+            }
+            Arrays.sort(temp);
+            for(int i=0; i<len; i++){
+                matrix[row+i][i] = temp[i];
+            }
+        }
+    }
+    private static void reverse(int[] arr){
+        int n = arr.length;
+            for(int i=0; i<n/2; i++){
+                int temp = arr[i];
+                arr[i] = arr[n-i-1];
+                arr[n-i-1] = temp;
+                
+            }
+        }
+}
+// Make Matrix Beautifu
+
+A beautiful matrix is defined as a square matrix in which the sum of elements in every row and every column is equal. Given a square matrix mat[][], your task is to determine the minimum number of operations required to make the matrix beautiful.
+In one operation, you are allowed to increment the value of any single cell by 1.
+
+class Solution {
+    public static int balanceSums(int[][] mat) {
+        // code here
+        int maxSum = 0, n = mat.length, m = mat[0].length, minOp=0;
+        int[] colSum = new int[m];
+        int[] rowSum = new int[n];
+        int colMax = 0, rowMax =0;
+        for(int i=0; i<n; i++){
+            for(int j=0; j<m; j++){
+                rowSum[i] += mat[i][j];
+            }
+            rowMax = Max(rowMax, rowSum[i]);
+        }
+        
+        for(int j=0; j<m; j++){
+            for(int i=0; i<n; i++){
+                colSum[j] += mat[i][j];
+            }
+            colMax = Max(colSum[j], colMax);
+        }
+        int target = Max(colMax, rowMax);
+        int i=0, j=0;
+        while(i<n && j<m){
+            int diff = Min(target - rowSum[i], target-colSum[j]);
+            rowSum[i] += diff;
+            colSum[j] += diff;
+            if(rowSum[i]== target){
+                i++;
+            }
+            if(colSum[j] == target){
+                j++;
+            }
+            minOp += diff;
+        }
+        return minOp;
+    }
+    public static int Max(int a, int b){
+        if(a>=b){
+            return a;
+        }
+        return b;
+    }
+    public static int Min(int a, int b){
+        if(a<=b){
+            return a;
+        }
+        return b;
+    }
+}
+// Set Matrices Zero
+Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's. You must do it in place.
+
+Input: matrix = [[1,1,1],[1,0,1],[1,1,1]]
+Output: [[1,0,1],[0,0,0],[1,0,1]]
+
+class Solution {
+    public void setZeroes(int[][] matrix) {
+       int row = matrix.length, col = matrix[0].length;
+       boolean flagRow = false, flagCol = false;
+        for(int i=0; i<col; i++){
+            if(matrix[0][i]==0){
+                flagRow = true;
+            }
+        }
+        for(int j=0;j<row; j++){
+            if(matrix[j][0]==0){
+                flagCol = true;
+            }
+        }
+        for(int i=1; i<row; i++){
+            for(int j=1; j<col; j++){
+                if(matrix[i][j]==0){
+                    matrix[0][j] = 0;
+                    matrix[i][0] = 0;
+                }
+            }
+        }
+        for(int i=1; i<row; i++){
+            for(int j=1; j<col; j++){
+                if(matrix[0][j]==0 || matrix[i][0]==0){ // using the first row and col as the marker
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+        if(flagRow==true){
+            for(int i=0; i<col; i++){
+                matrix[0][i] = 0;
+            }
+        }
+        if(flagCol == true){
+            for(int i=0; i<row; i++){
+                matrix[i][0] = 0;
+            }
+        }
+    }
+}
+// Merge Intervals
+
+Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input. Input: intervals = [[1,3],[2,6],[8,10],[15,18]] Output: [[1,6],[8,10],[15,18]]
+Explanation: Since intervals [1,3] and [2,6] overlap, merge them into [1,6].
+
+class Solution {
+    public int Max(int a, int b){
+        if(a>=b){
+            return a;
+        }
+        return b;
+    }
+    public int[][] merge(int[][] intervals) {
+        int n = intervals.length;
+        int m = intervals[0].length;
+        for(int i=0; i<n-1; i++){
+            for(int j=0; j<n-1-i; j++){
+                if(intervals[j][0] > intervals[j+1][0]){
+                    int[] temp = intervals[j];
+                    intervals[j] = intervals[j+1];
+                    intervals[j+1] = temp;
+                }
+            }
+        }
+        int[][]result = new int[intervals.length][2];
+        int idx=0;
+        result[idx] = intervals[0];
+        for(int i=1; i<intervals.length; i++){
+            int[] last = result[idx];
+            int[] current = intervals[i];
+            if(last[1] >= current[0]){
+                last[1] = Max(last[1], current[1]);
+            }
+            else{
+               result[++idx] = current;
+            }
+        }
+        int[][] merge = new int[idx+1][2];
+        for(int i=0; i<merge.length; i++){
+            merge[i] = result[i];
+        }
+        return merge;
+    }
+}
+// Merge 2D Array by Summing values: 
+
+You are given two 2D integer arrays nums1 and nums2.
+
+nums1[i] = [idi, vali] indicate that the number with the id idi has a value equal to vali.
+nums2[i] = [idi, vali] indicate that the number with the id idi has a value equal to vali.
+Each array contains unique ids and is sorted in ascending order by id.
+
+Merge the two arrays into one array that is sorted in ascending order by id, respecting the following conditions:
+
+Only ids that appear in at least one of the two arrays should be included in the resulting array.
+Each id should be included only once and its value should be the sum of the values of this id in the two arrays. If the id does not exist in one of the two arrays, then assume its value in that array to be 0.
+Return the resulting array. The returned array must be sorted in ascending order by id. 
+
+Example 1:
+
+Input: nums1 = [[1,2],[2,3],[4,5]], nums2 = [[1,4],[3,2],[4,1]]
+Output: [[1,6],[2,3],[3,2],[4,6]]
+Explanation: The resulting array contains the following:
+- id = 1, the value of this id is 2 + 4 = 6.
+- id = 2, the value of this id is 3.
+- id = 3, the value of this id is 2.
+- id = 4, the value of this id is 5 + 1 = 6.
+
+class Solution {
+    public int[][] mergeArrays(int[][] nums1, int[][] nums2) {
+        int n = nums1.length;
+        int m = nums2.length, k=0;
+        int[][] newarr = new int[n+m][2];
+        for(int i=0; i<n; i++){
+            newarr[k++] = nums1[i];
+        }
+        for(int i=0; i<m; i++){
+            newarr[k++] = nums2[i];
+        }
+        sort(newarr);
+        int[][] arr = new int[n+m][2];
+        int p =0;
+        k=0;
+        while(p< newarr.length){
+            int id = newarr[p][0];
+            int sum = newarr[p][1];
+            int j = p+1;
+            while(j < newarr.length && newarr[j][0] == id){
+                sum += newarr[j][1];
+                j++;
+            }
+            arr[k][0] = id;
+            arr[k][1] = sum;
+            k++;
+            p= j;
+        }
+        int[][] temp = new int[k][2];
+        for(int i=0; i<k; i++){
+            temp[i] = arr[i];
+        }
+        return temp;
+    }
+    public void sort(int[][] arr){
+        for(int i=0; i<arr.length-1; i++){
+            for(int j=0; j<arr.length-i-1; j++){
+                if(arr[j][0] > arr[j+1][0]){
+                    int[] temp = arr[j];
+                    arr[j] = arr[j+1];
+                    arr[j+1] = temp;
+                }
+            }
+        }
+    }
+}
+
+/////////* public static int countUnique(int[] arr) {
+    int count = 0;
+    for (int i = 0; i < arr.length; i++) {
+        boolean isUnique = true;
+        for (int j = 0; j < i; j++) {
+            if (arr[i] == arr[j]) {
+                isUnique = false;
+                break;
+            }
+        }
+        if (isUnique) count++;
+    }
+    return count;
+}
+*//////////////////
+
+// Reshape the Matrix: 
+
+In MATLAB, there is a handy function called reshape which can reshape an m x n matrix into a new one with a different size r x c keeping its original data.
+You are given an m x n matrix mat and two integers r and c representing the number of rows and the number of columns of the wanted reshaped matrix.
+The reshaped matrix should be filled with all the elements of the original matrix in the same row-traversing order as they were.
+If the reshape operation with given parameters is possible and legal, output the new reshaped matrix; Otherwise, output the original matrix.
+
+class Solution {
+    public int[][] matrixReshape(int[][] mat, int r, int c) {
+       if(r*c != mat[0].length*mat.length){
+            return mat;
+       }
+       int[][] arr = new int[r][c];
+       int m = mat.length, n= mat[0].length;
+       for(int i=0; i<r*c; i++){
+            arr[i/c][i%c] = mat[i/n][i%n]; 
+       }
+       return arr;
+    }
+}
+
+// Shift 2D Grid
+
+Given a 2D grid of size m x n and an integer k. You need to shift the grid k times.
+
+In one shift operation:
+
+Element at grid[i][j] moves to grid[i][j + 1].
+Element at grid[i][n - 1] moves to grid[i + 1][0].
+Element at grid[m - 1][n - 1] moves to grid[0][0].
+Return the 2D grid after applying shift operation k times.
+
+Input: grid = [[3,8,1,9],[19,7,2,5],[4,6,11,10],[12,0,21,13]], k = 4
+Output: [[12,0,21,13],[3,8,1,9],[19,7,2,5],[4,6,11,10]]
+
+class Solution {
+    public int[][] shiftGrid(int[][] arr, int k) {
+        int m = arr.length, n = arr[0].length;
+        int[] newarr = new int[m*n];
+        int[] shifted = new int[m*n];
+        int[][] grid = new int[m][n];
+
+        int idx=0, size=m*n;
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n;j++){
+                newarr[idx++] = arr[i][j];
+            }
+        }
+        // now we shift the elements
+        for(int i=0; i<newarr.length; i++){
+            shifted[(i+k)%size] = newarr[i];
+        }
+        idx=0;
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                grid[i][j] = shifted[idx++];
+            }
+        }
+        
+        return grid;
+
+    }
+}
+
+// Tranpose Matrix: row becomes column
+
+class Solution {
+    public int[][] transpose(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[][] tranpose = new int[n][m];
+        for(int i=0; i<n; i++){
+            for(int j=0; j<m; j++){
+                tranpose[i][j] = matrix[j][i];
+            }
+        }
+        return tranpose;
+    }
+}
+
+// Diagonal Tranversal
+
+public class diagonalTraversal{
+    // antidiagonal traversal 
+    public static int[] antiDiagonal(int[][] arr){
+        int m = arr.length, n=arr[0].length, idx=0;
+        int[] newarr = new int[m*n];
+        for(int s=0; s<=2*(n-1); s++){
+            for(int i=0; i<m; i++){
+                int j = s - i;
+                if(j>=0 && j<n){
+                    newarr[idx++] = arr[i][j];
+                }
+            }
+        }
+        return newarr;
+    }
+    // diagonal traveral
+    public static int[] diagonal(int[][] arr){
+        int m = arr.length, n = arr[0].length, idx=0;
+        int[] newarr = new int[m*n];
+        for(int d=0; d<m+n-1; d++){
+            int row, col;
+            if(d<n){     // for upper diagonal including diagonal
+                row = 0;
+                col = n - 1 - d;   
+            }
+            else{
+                row = d - (n-1); // for 3x3 matrix, that starts from 1. so d = 3. row = 3 - (3-1)= 1
+                col = 0;
+            }
+            if(d%2==0){ // for even diagonals
+                while(row<m && col<n){  
+                    newarr[idx++] = arr[row][col];
+                    row++;
+                    col++;
+                }
+            }
+            else{
+                // length of the current diagonal
+                int len = Math.min(m-row, n-col);
+                // traverese backward to find the 
+                for(int i=len-1; i>=0; i--){    
+                    // if row = 1 and col = 3, then m-row = 3-1 = 2 and n-col = 3-3 = 0
+                    // so, Math.min(2,-1) =-1. len = -2
+                    newarr[idx++] = arr[i+row][i+col];
+                }
+            }
+        }
+        return newarr;
+    }
+   }
+
+// Matrix Operations
+
+public class matrixOperation{
+    public static void tranposeMatrix(int[][] arr){
+        int n = arr.length;
+        // of the same dim row and col
+        for(int i=0; i< arr.length; i++){
+            for(int j=i; j< arr[0].length; j++){
+                int temp = arr[i][j];
+                arr[i][j] = arr[j][i];
+                arr[j][i] = temp;
+            }
+        }
+    }
+    // c.w. rotating a matrix by 90 degree
+    public static void rotate90Degree(int[][] arr){
+        tranposeMatrix(arr);
+        int n = arr.length;
+        // code for reversing the matrix
+        for(int i=0; i<arr.length; i++){
+            for(int j=0; j< (arr[0].length)/2; j++){
+                int temp = arr[i][j];
+                arr[i][j] = arr[i][n-1-j];
+                arr[i][n-1-j] = temp;
+            }
+        }
+    }
+    // matrix multiplication
+    public static int[][] matrixMultiplication(int[][] arr, int[][] arr1){
+        int n= arr.length, m = arr[0].length, p = arr1.length, q = arr1[0].length;
+        if(m != p){
+            throw new RuntimeException("invalid matrix dimension");
+        }
+        int[][] newarr = new int[n][q];
+        for(int i=0; i<n; i++){
+            for(int j=0; j<q; j++){
+                newarr[i][j] += (arr[i][j] * arr1[j][i]);
+            }
+        }
+        return newarr;
+    }
+}
+// Row and Column rotation of Matrix
+
+public class kShift2D{
+    // right shift of row
+    public static int[][] kShift_row(int[][] arr, int k){
+        int m = arr.length, n = arr[0].length;
+        int[][] newarr = new int[m][n];
+        k = k%n;
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                int idx = (j+k)%n;
+                newarr[i][idx] = arr[i][j]; 
+            }
+        }
+        
+        return newarr;
+    }
+    // left shift of row
+    public static int[][] kShift_row_left(int[][] arr, int k){
+        int m = arr.length, n = arr[0].length;
+        int[][] newarr = new int[m][n];
+        k = k%n;
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                int idx = (n+j-k)%n;    //  to avoid negative modulus and negative indexing
+                newarr[i][idx] = arr[i][j];
+            }
+        }
+        return newarr;
+    }
+    // upward shift of column
+    public static int[][] kshiftcol_up(int[][] arr, int k){
+        int m = arr.length, n = arr[0].length;
+        int[][] newarr = new int[m][n];
+        k = k%m;
+        for(int j=0; j<n; j++){
+            for(int i=0; i<m; i++){
+                int idx = (m+i-k)%m; // we want to avoid negative mod
+                newarr[idx][j] = arr[i][j];
+            }
+        }
+        return newarr;
+    }
+    /*
+     * for(int j=0; j<m; j++){
+            String[] temp = new String[n];
+            for(int i=0; i<n; i++){
+                temp[(i+examWeek)%n] = matrix[i][j];
+            }
+            for(int i=0; i<n;i++){
+               matrix[i][j] = temp[i];
+            }
+        }
+     */
+    // downward shift of column
+    public static int[][] kshiftcol_down(int[][] arr, int k){
+        int m = arr.length, n = arr[0].length;
+        int[][] newarr= new int[m][n];
+        k = k%m;
+        for(int j=0; j<n; j++){
+            for(int i=0; i<m; i++){
+                int idx = (i+k)%m;
+                newarr[idx][j] = arr[i][j];
+            }
+        }
+        return newarr;
+    }
+}
