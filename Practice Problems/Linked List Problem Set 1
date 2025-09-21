@@ -1,0 +1,250 @@
+// leetcode problems 
+public class LinkedList_Problems{
+    // reverse linked 
+    public ListNode reverList(ListNode head){
+        ListNode current = head, prev = null, next = null;
+        while(current != null){
+            next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+        return prev;
+    }
+    // delete Node
+    public ListNode deleListNode(ListNode head, int val){
+        ListNode dh = new ListNode(-1); // for this, we no longer need a previous pointer
+        dh.next = head;
+        ListNode current = dh;
+        while(current.next != null){
+            if(current.val == val){
+                current.next = current.next.next;
+            }
+            else{
+                current = current.next;
+            }
+        }
+        return dh.next;
+    }
+    // removing duplicates from sorted list
+    public ListNode removeDuplicates(ListNode head){
+        ListNode current = head;
+        while(current != null && current.next != null){
+            if(current.val == current.next.val){
+                current.next = current.next.next;
+            }
+            else{
+                current=current.next;
+            }
+        }
+        return head;
+    }
+    // complete ALL delete duplicate list nodes
+    public ListNode removeAllDuplicates(ListNode head){
+        ListNode current = head, prev = null;
+        while(current!= null){
+            boolean flag = false;
+            while(current.next != null && current.next.val == current.val){
+                current = current.next;
+                flag = true;
+            }
+            if(flag){
+                if(prev == null){
+                    head = current.next;
+                }
+                else{
+                    prev.next = current.next;
+                }
+            }
+            else{
+                if(prev == null){
+                    prev = head;
+                }
+                else{
+                    prev = current;
+                }
+            }
+            current = current.next;
+        }
+        return head;
+    }
+    // remove Nth element from the end
+    public ListNode removeNthFromEnd(ListNode head, int n){
+        int k = size(head) - n;
+        ListNode current = head, prev = null;
+        while(k -- >0){
+            prev = current;
+            current = current.next;
+        }
+        prev.next = current.next;
+        return head;      
+    }
+    // Swap Nodes in Pair
+    public ListNode swapNodesPair(ListNode head){
+        ListNode dh = new ListNode(-1);
+        dh.next = head;
+        ListNode current= dh.next, prev = dh;
+        while(current != null && current.next != null){
+            ListNode first = current, second = current.next;
+            prev.next = second;
+            first.next = second.next;
+            second.next = first;
+
+            prev = current;
+            current = current.next;
+        }
+        return dh.next;
+    }
+    // Rotate List
+    public ListNode rotateRight(ListNode head, int k){
+        if(head == null) return head;
+        int size = size(head);
+        k = k%size;
+
+        if(k == 0)return head;
+        int step = size - k;
+        ListNode current = head, prev = null;
+        while(step -- > 0){
+            prev = current;
+            current = current.next;
+        }
+        ListNode newHead = current;
+        if(prev != null){
+            prev.next = null;
+        }
+
+        ListNode temp = newHead;
+        while(temp.next != null){
+            temp = temp.next;
+        }
+        temp.next = head;
+        return newHead;
+    }
+    // Reverse in between
+    public ListNode reverseInBetween(ListNode head, int left, int right){
+        if(head == null || head.next == null){
+            return head;
+        }
+        ListNode dh = new ListNode(-1);
+        dh.next = head;
+        ListNode first = nodeAt(head, left);
+        ListNode second = nodeAt(head, right);
+        ListNode prev = null;
+        if(left > 1){
+            prev = nodeAt(head, left -1 );
+        }
+        ListNode  last = second.next;
+        second.next = null;
+        ListNode newHead = reverse(first);
+        ListNode tail = newHead;
+        while(tail.next != null){
+            tail = tail.next;
+        }
+        if(prev != null){
+            prev.next = newHead;
+        }else{
+            dh.next = newHead;
+        }
+        tail.next = last;
+        return dh.next;
+    }
+    public ListNode reverse(ListNode head){
+        ListNode temp = head,prev = null, next = null;
+        while(temp != null){
+            next = temp.next;
+            temp.next = prev;
+            prev = temp;
+            temp = next;
+        }
+        return prev;
+    }
+    public ListNode nodeAt(ListNode head, int k){
+        ListNode temp = head;
+        while(temp != null && k-- >0){
+            temp = temp.next;
+        }
+        return temp;
+    }
+    // Palindrom Linked List
+    public boolean isPalindrom(ListNode head){
+        ListNode temp = head, prev = null;
+        int middle = size(head)/2;
+        while(middle -- > 0){
+            prev = temp;
+            temp = temp.next;
+        }
+        prev.next = null;
+        ListNode c2 = temp;
+        ListNode c1 = reverList(head);
+        while(c1 != null && c2 != null){
+            if(c1.val != c2.val){
+                return false;
+            }
+            c1 = c1.next;
+            c2 = c2.next;
+        }
+        return true;
+    }
+    public int size(ListNode head){
+        ListNode current = head;
+        int c =0;
+        while(current != null){
+            c++;
+            current = current.next;
+        }
+        return c;
+    }
+    // Merging two sorted linked list
+
+    public ListNode MergeTwoSortedList(ListNode list1, ListNode list2){
+        ListNode dh = new ListNode(-1);
+        ListNode current = dh;
+        ListNode c1 = list1, c2 = list2;
+        while(c1 != null && c2 != null){
+            if(c1.val <= c2.val){
+                current.next = c1;
+                c1 = c1.next;
+            }
+            else{
+                current.next = c2;
+                c2 = c2.next;
+            }
+            current = current.next;
+        }
+        return dh.next;
+    }
+
+    // Finding the Node of intersection of two linke list (SHOULD RETAIN ORIGINAL STRUCTURE)
+    public ListNode getIntersecListNode(ListNode list1, ListNode list2){
+        ListNode c1 = list1, c2 = list2;
+        while(c1 != c2){
+            if(c1 != null){
+                c1 = c1.next;
+            }
+            else{
+                c1 = list1;
+            }
+            if(c2 != null){
+                c2 = c2.next;
+            }
+            else{
+                c2 = list2;
+            }
+        }
+        return c2;
+    }
+
+    // is there cycle in linked list
+    public boolean isCycle(ListNode head){
+        if(head == null || head.next == null) return false;
+        ListNode slow = head, fast = head.next;
+        while(slow != null && fast != null){
+            slow = slow.next;
+            fast= fast.next.next;
+            if(slow == fast){
+                return true;
+            }
+        }
+        return false;
+    }
+}
