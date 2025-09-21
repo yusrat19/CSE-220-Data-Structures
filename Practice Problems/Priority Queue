@@ -1,0 +1,74 @@
+public class Max_Heap{
+    int[][] heap;
+    int size;
+    public Max_Heap(int c){
+        this.heap = new int[c][2];
+        size = 0;
+    }
+    public void insert(int[] x){
+        if(size == heap.length) return;
+        heap[size] = x;
+        size++;
+        swim(size);
+    }
+    public void swim(int idx){
+        while(idx > 0 && compare(heap[parent(idx)], heap[idx]) < 0){
+            swap(parent(idx), idx);
+            idx = parent(idx);
+        }
+    }
+    public int compare(int[]a , int[] b){
+        if(a[0] != b[0]){
+            return a[0] - b[0];
+        }else{
+            return a[1] - b[1];
+        }
+    }
+    public int parent(int idx){
+        return (idx - 1)/2;
+    }
+    public void swap(int x, int y){
+        int[] t = heap[x];
+        heap[x] = heap[y];
+        heap[y] = t;
+    }
+    public int[] extractMax(){
+        if(size == 0) return new int[]{-1,-1};
+        int[] max = heap[0];
+        heap[0] = heap[size - 1];
+        sink(0);
+        size -- ;
+        return max;
+    }
+    public void sink(int idx){
+        while(true){
+            int max = idx, left = 2*idx + 1, right = 2*idx + 2;
+            if(left < size && compare(heap[left], heap[max]) > 0){
+                max = left;
+            }
+            if(right< size && compare(heap[right], heap[max]) > 0){
+                max = right;
+            }
+            if(idx == max) break;
+            swap(idx,max);
+            idx = max;
+        }
+    }
+    // quiz 4
+    public int[] quiz4(int[] tasks, int[] priority, int low, int high){
+        Max_Heap hp = new Max_Heap(tasks.length);
+        for(int i=0; i<tasks.length; i++){
+            int[] temp = {tasks[i], priority[i]};
+            hp.insert(temp);
+        }
+        int[] result = new int[tasks.length];
+        int idx = 0;
+        for(int i=0; i<tasks.length; i++){
+            int[] temp = hp.extractMax();
+            if(temp[1] >= low && temp[1] <= high){
+                result[idx++] = temp[0];
+            }
+        }
+        return result;
+    }
+}
