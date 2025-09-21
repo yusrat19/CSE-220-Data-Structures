@@ -1,0 +1,366 @@
+// Edge Class
+
+public class Edge{
+    int ep1;
+    int ep2;
+    int weight;
+    Edge next;
+    String label;
+
+    public Edge(int ep1, int ep2, int w){
+        this.ep1 = ep1;
+        this.ep2 = ep2;
+        this.weight = w;
+        this.next = null;
+    }
+
+    public Edge(int ep1, int ep2, int w, String label){
+        this.label = label;
+        this.ep1 = ep1;
+        this.ep2 = ep2;
+        this.weight = w;
+        this.next = null;
+    }
+}
+
+// Task 2
+
+// Driver Code
+
+public class Tester_task2{
+    public static void main(String[] args) {
+        Task2 graph = new Task2(7);
+        int[][] nodes = {{0,1,236}, {0,2, 17},{0,3, 71}, {0,4, 91}, {0,5, 12}, {0, 6, 18},
+                        {1,2,34}, {1,3, 15}, {1,4, 25}, {2, 3, 98}, {2, 4, 45}, {2, 5, 62}, 
+                        {2, 6, 19}, {3,5, 39}, {3,4, 98}, {4, 5, 52}};
+        
+        System.out.println("======== Task 2a ==========");
+
+        for(int i=0 ; i< nodes.length; i++){
+            graph.add_Matrix(nodes[i][0], nodes[i][1], nodes[i][2]);
+        }
+
+        System.out.println("\n === Adjacency Matrix ===");
+
+        Task2.printAdjMatrix(graph);
+        System.out.println("Index of the Max Edge sum (using adj matrix): " + graph.MaxEdgeSum_Matrix(graph));
+        System.out.println("\n ===== Adjacency List ========");
+
+        // using list
+        for(int i = 0; i < nodes.length; i++) {
+            String label = "E" + i; 
+            graph.add_List(nodes[i][0], nodes[i][1], nodes[i][2], label);
+        }
+        Task2.printNode(graph.list);
+        System.out.println("Index of the Max Edge sum (using list): " + graph.MaxEdgeSum_List(graph));
+    }
+}
+
+// Class File
+
+public class Task2{
+        Edge[] list;
+        int[][] adj;
+      
+        public Task2(int vertex){
+            this.adj = new int[vertex][vertex];
+            this.list = new Edge[vertex];
+        }
+    
+        // weighted
+        public void add_Matrix(int s, int d, int weight){
+           this.adj[s][d] = weight; // for undirected unweighted graph
+            this.adj[d][s] = weight;
+        }
+        // using adjacency list
+
+        public void add_List(int s, int d, int w, String label) {
+    
+            Edge node1 = new Edge(s, d, w, label);
+            Edge node2 = new Edge(d, s, w, label);
+            
+            
+            if(list[s] == null) {
+                list[s] = node1;
+            } 
+            else {
+                node1.next = list[s];
+                list[s] = node1;
+            }
+            
+            if(list[d] == null) {
+                list[d] = node2;
+            } 
+            else {
+                node2.next = list[d];
+                list[d] = node2;
+            }
+    }
+        
+        // using Matrix
+        public int MaxEdgeSum_Matrix(Task2 g){
+            int[][] adj = g.adj;
+            int max= 0;
+            int maxVertex = -1;
+            for(int i=0;i<adj.length; i++){
+                int sum = 0;
+                for(int j=0; j<adj.length; j++){
+                    sum += adj[i][j];
+                }
+                if(sum > max){
+                    max = sum;
+                    maxVertex = i;
+                }
+            }
+            return maxVertex;
+        }
+    
+        public int MaxEdgeSum_List(Task2 g){
+            int max = 0;
+            int maxVertex = -1;
+            for(int i=0; i<g.list.length; i++){
+                Edge node = g.list[i];
+                int sum = vertexSum(node);
+                if(sum > max){
+                    max = sum;
+                    maxVertex = i;
+                }
+            }
+            return maxVertex;
+        }
+        private int vertexSum(Edge e){
+            Edge current = e;
+            int c = 0;
+            while(current != null){
+                c += current.weight;
+                current = current.next;
+            }
+            return c;
+        }
+        public static void printNode(Edge[] list){
+        for(int i=0; i<list.length; i++){
+            System.out.print("Node " + i + ": ");
+            Edge current = list[i];
+            while(current!=null){
+                System.out.print(current.label + "->" + current.ep2 + " ");
+                current = current.next;
+            }
+            System.out.println();
+        }
+    }
+    public static void printAdjMatrix(Task2 graph){
+            for(int i=0; i<graph.adj.length; i++){
+            for(int j=0; j<graph.adj.length; j++){
+                System.out.print(graph.adj[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+    }
+} 
+
+// Task 3 & 4
+
+// Driver Code
+
+public class Tester_task3_4{
+    public static void main(String[] args) {
+        Task3 graph = new Task3(7);
+        int[][] nodes = {{0,1,236}, {0,2, 17},{0,3, 71}, {0,4, 91}, {0,5, 12}, {0, 6, 18},
+                        {1,2,34}, {1,3, 15}, {1,4, 25}, {2, 3, 98}, {2, 4, 45}, {2, 5, 62}, 
+                        {2, 6, 19}, {3,5, 39}, {3,4, 98}, {4, 5, 52}};
+        
+        System.out.println("======== Task 3a ==========");
+
+        for(int i=0 ; i< nodes.length; i++){
+            graph.add_Matrix(nodes[i][0], nodes[i][1], nodes[i][2]);
+        }
+
+        System.out.println("\n === Adjacency Matrix ===");
+
+        Task3.printAdjMatrix(graph);
+       
+        System.out.println("Max degree of a vertex: " + graph.MaxDegree_Adj(graph));
+        System.out.println("Max Edge sum (using adj matrix): " + graph.MaxEdgeSum_Matrix(graph));
+        
+        System.out.println("======== Task 3b ==========");
+        System.out.println("\n ===== Adjacency List ========");
+
+        // using list
+        
+        for(int i = 0; i < nodes.length; i++) {
+            String label = "E" + i; 
+            graph.add_List(nodes[i][0], nodes[i][1], nodes[i][2], label);
+        }
+        Task3.printNode(graph.list);
+        System.out.println("Max degree of a vertex: " + graph.MaxDegree_List(graph));
+        System.out.println("Max Edge sum (using list): " + graph.MaxEdgeSum_List(graph));
+
+        System.out.println("======== Task 4 ==========");
+
+        System.out.println("====== Directed to Undirected Graph (Adjacency Matrix) ====== ");
+        graph.directedToUndirected_MatrixRep(graph);
+        Task3.printAdjMatrix(graph);        
+        System.out.println("====== Directed to Undirected Graph (Adjacency List) ====== ");
+        graph.directedToUndirected_ListRep(graph);
+        Task3.printNode(graph.list);
+    }
+}
+
+// Class File for Task 3 and 4 
+
+public class Task3{
+    int[][] adj;
+    Edge[] list;
+
+    public Task3(int vertex){
+        this.adj = new int[vertex][vertex];
+        this.list = new Edge[vertex];
+    }
+
+    public void add_Matrix(int s, int d, int weight){
+        this.adj[s][d] = weight;
+    }
+
+    public void add_List(int s, int d, int w, String label) {
+    
+            Edge node1 = new Edge(s, d, w, label);
+            if(list[s] == null) {
+                list[s] = node1;
+            } 
+            else {
+                node1.next = list[s];
+                list[s] = node1;
+            }
+    }
+    // Task 3a
+    public int MaxDegree_Adj(Task3 g){
+        int[][]adj = g.adj;
+        int max = 0;
+        for(int i=0; i<adj.length; i++){
+            int deg = 0;
+            for(int j=0; j<adj.length; j++){
+                if(adj[i][j] != 0){
+                    deg++;
+                }
+                max = Math.max(deg, max);
+            }
+        }
+        return max;
+    }
+    public int MaxDegree_List(Task3 graph){
+        int max = 0;
+        int len = graph.list.length;
+        for(int i = 0; i<len; i++){
+            Edge current = graph.list[i];
+            int c = countNode(current);
+            max = Math.max(c, max);
+        }
+        return max;
+    }
+    private int countNode(Edge node){
+        int c=0;
+        Edge current = node;
+        while(current != null){
+            c++;
+            current = current.next;
+        }
+        return c;
+    }
+    // Task 3b
+    public int MaxEdgeSum_Matrix(Task3 g){
+        int max = 0, vertex = -1;
+        for(int i=0; i<g.adj.length; i++){
+            int sum = 0;
+            for(int j=0; j<g.adj.length; j++){
+                sum += g.adj[i][j];
+            }
+            if(max < sum){
+                max = sum;
+                vertex = i;
+            }
+        }
+        return vertex;
+    }
+    public int MaxEdgeSum_List(Task3 g){
+        int max = 0, vertex = -1;
+        for(int i=0; i<g.list.length; i++){
+            Edge node = g.list[i];
+            int sum = vertexSum(node);
+            if(sum > max){
+                max = sum;
+                vertex = i;
+            }
+        }
+        return vertex;
+    }
+    private int vertexSum(Edge node){
+        Edge current = node;
+        int sum = 0;
+        while(current != null){
+            sum += current.weight;
+            current = current.next;
+        }
+        return sum;
+    }
+
+    public static void printAdjMatrix(Task3 graph){
+         for(int i=0; i<graph.adj.length; i++){
+            for(int j=0; j<graph.adj.length; j++){
+                System.out.print(graph.adj[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+     public static void printNode(Edge[] list){
+        for(int i=0; i<list.length; i++){
+            System.out.print("Node " + i + ": ");
+            Edge current = list[i];
+            while(current!=null){
+                System.out.print(current.label + "->" + current.ep2 + " ");
+                current = current.next;
+            }
+            System.out.println();
+        }
+    }
+    public int[][] directedToUndirected_MatrixRep(Task3 g){
+        for(int i=0; i<g.adj.length; i++){
+            for(int j=0; j<g.adj.length; j++){
+                if(g.adj[i][j] != 0){
+                    g.adj[j][i] = g.adj[i][j];
+                }
+            }
+        }
+        return g.adj;        
+    }
+
+
+    /// directed to undirected graph using adj list
+    public Edge[] directedToUndirected_ListRep(Task3 g){
+        Edge[] list = new Edge[g.list.length];
+        
+        for(int i=0; i<list.length; i++){
+            Edge temp = g.list[i];
+            while(temp != null){
+                add_List(list, temp.ep1, temp.ep2, temp.weight, temp.label);
+                if(temp.ep1 != temp.ep2){
+                    add_List(list, temp.ep2, temp.ep1, temp.weight, temp.label);
+                }
+                temp = temp.next;
+            }
+        }
+        this.list = list;
+        return list;
+    }
+    
+    public void add_List(Edge[] list, int ep1, int ep2, int weight, String label){
+        Edge node = new Edge(ep1, ep2, weight, label);
+        if(list[ep1] == null){
+            list[ep1] = node;
+        }
+        else{
+            node.next = list[ep1];
+            list[ep1] = node;
+        }
+    }
+}
