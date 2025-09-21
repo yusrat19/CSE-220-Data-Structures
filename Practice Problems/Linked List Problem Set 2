@@ -1,0 +1,129 @@
+public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        ListNode dh = new ListNode(0);
+        ListNode current = dh;
+        ListNode c1 = list1, c2 = list2;
+        while(c1!=null && c2!=null){
+            if(c1.val <= c2.val){
+                current.next = c1;
+                c1 = c1.next;
+            }
+            else if(c1.val > c2.val){
+                current.next = c2;
+                c2 = c2.next;
+            }
+            current = current.next;
+        }
+        if(c1!=null){
+            current.next = c1;
+        }
+        else if(c2!=null){
+            current.next = c2;
+        }
+        return dh.next;
+    }
+
+public ListNode deleteDuplicates(ListNode head) {
+        ListNode current = head;
+        ListNode prev = null;
+        while(current!=null){
+            boolean flag = false;
+            while(current.next!=null && current.val == current.next.val){
+                flag = true;
+                current = current.next;
+            }
+            if(flag){
+                if(prev == null){
+                    head = current.next;
+                }
+                else{
+                    prev.next = current.next;
+                }
+            }
+            else{
+                if(prev == null){
+                    prev = head;
+                }
+                else{
+                    prev = prev.next;
+                }
+            }
+            current = current.next;
+        }
+        return head;
+    }
+
+ public ListNode swapPairs(ListNode head) {
+        if(head == null){
+            return null;
+        }
+        ListNode dh = new ListNode(0);
+        dh.next = head;
+        
+        ListNode prev = dh;
+
+        ListNode current = dh.next;
+
+        while(current!=null && current.next!=null){
+            ListNode first = current;
+            ListNode second = current.next;
+
+            prev.next = second;
+            first.next = second.next;
+            second.next = first;
+            
+            prev = current;
+            current = first.next;
+        }
+        return dh.next;
+    }
+
+public void reorderList(ListNode head) {
+
+        ListNode first = head, second = null;
+        ListNode dh = new ListNode(0);
+        dh.next = head;
+
+        ListNode current = head;
+        int len = size(head);
+        int middle = len/2;
+        ListNode prevP = null;
+        while(middle -- >0){
+            prevP = current;
+            current = current.next;
+        }
+        if(len%2!=0){
+            prevP = current;
+            current = current.next;
+        }
+        prevP.next = null;
+        second = reverse(current);
+        
+        
+        ListNode t1 = first, t2 = second, prev = dh.next;
+        while((t1!=null && t2!=null)){
+            ListNode temp1 = t1.next;
+            ListNode temp2 = t2.next;
+
+            t1.next = t2;
+            if (temp1 != null) {
+                t2.next = temp1;
+            } else {
+                t2.next = null;
+            }
+            if(temp2 == null && temp1!=null){
+                t2.next = temp1;
+            }
+            t1 = temp1;
+            t2 = temp2;
+        }
+        
+    }
+    public int size(ListNode head){
+        int len = 0;
+        ListNode current = head;
+        while(current!=null){
+            len++;
+            current = current.next;
+        }
+        return len;
+    }
