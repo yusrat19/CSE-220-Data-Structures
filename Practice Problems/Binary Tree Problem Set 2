@@ -1,0 +1,501 @@
+public class LabQuizPrep{
+    // problem 1
+    public TreeNode insert(TreeNode root, int val){
+        if(root == null){
+            return new TreeNode(val);
+        }
+        if(val < root.elem){
+            return insert(root.left, val);
+        }
+        else if(val > root.elem){
+            return insert(root.right, val);
+        }
+        return root;
+    }
+    // problem 2
+    public TreeNode search(TreeNode root, int key){
+        if(root == null) return null;
+        if(root.elem == key) return root;
+        if(key < root.elem) return search(root.left, key);
+        else{
+            return search(root.left, key);
+        }
+    }
+    // problem 4
+    public void inorder(TreeNode root){
+        if(root == null) return;
+        inorder(root.left);
+        System.out.print(root.elem + " ");
+        inorder(root.right);
+    }
+    // problem 5
+    public void preorder(TreeNode root){
+        if(root == null) return;
+        System.out.println(root.elem);
+        preorder(root.left);
+        preorder(root.right);
+    }
+    // problem 6
+    public void postorder(TreeNode root){
+        if(root == null) return;
+        postorder(root.left);
+        postorder(root.right);
+        System.out.println(root.elem);
+    }
+    // problem 7
+    public TreeNode findMin(TreeNode root){
+        if(root == null) return null;
+        if(root.left == null){
+           return root;
+        }
+        return findMin(root.left);
+    }
+    // problem 8
+    public TreeNode findMax(TreeNode root){
+        if(root == null) return null;
+        if(root.right == null){
+            return root;
+        }
+        return findMax(root.right);
+    }
+    // problem 9
+    public boolean isBST(TreeNode root, int min, int max){
+        if(root == null) return true;
+        if(min >= root.elem || max <= root.elem) return false;
+        return isBST(root.right, root.elem, max) && isBST(root.left, min, root.elem);
+    }
+    // problem 10
+    public TreeNode lowestCommonAncestor(TreeNode root, int p, int q){
+        if(root == null) return null;
+        if(root.elem < p && root.elem < q){
+            return lowestCommonAncestor(root.right, p, q);
+        }
+        if(root.elem > p && root.elem > q){
+            return lowestCommonAncestor(root.left, p, q);
+        }
+        return root;
+    }
+    // problem 11
+    int c = 0;
+    public int kThsmallest(TreeNode root, int k){
+        if(root == null) return -1;
+        int left = kthLargest(root.left, k);
+        if(left != -1) return left;
+        c++;
+        if(c==k) return root.elem;
+        return kThsmallest(root.right, k);
+    }
+    public int kthLargest(TreeNode root, int k){
+        if(root == null) return -1;
+        int right = kthLargest(root.right, k);
+        if(right != -1) return right;
+        c++;
+        if(c== k) return root.elem;
+        return kthLargest(root.left, k); 
+    }
+    // problem 12
+    public int Height(TreeNode root){
+        if(root == null) return 0;
+        return 1 + Math.max(Height(root.left), Height(root.right));
+    }
+    // problem 13
+    public int RangeSum(TreeNode root, int L, int R){
+        if(root == null) return 0;
+        if(root.elem < L){
+            return RangeSum(root.right, L, R);
+        }
+        if(root.elem > R){
+            return RangeSum(root.left, L, R);
+        }
+        return root.elem + RangeSum(root.left, L, R) + RangeSum(root.right, L, R);
+    }
+    // count nodes in a range
+    public int RangeNode(TreeNode root, int L, int R){
+        if(root == null) return 0;
+        if(root.elem < L){
+            return RangeNode(root.right, L, R);
+        }
+        if(root.elem > R){
+            return RangeNode(root.left, L, R);
+        }
+        return 1 + RangeNode(root.left, L, R) + RangeNode(root.right, L, R);
+    }
+    // kTh Smallest in Range
+    public int kThSmallestRange(TreeNode root, int L, int R, int k){
+        if(root == null) return -1;
+        int left = kThSmallestRange(root.left, L, R, k);
+        if(left != -1){
+           return left;
+        }
+        if(root.elem >= L && root.elem <= R){
+            c++;
+            if(c== k) return root.elem;
+        }
+        return kThSmallestRange(root.right, left, R, k);
+    }
+    // problem 14
+    public TreeNode inorderSuccessor(TreeNode root, int val){
+        if(root == null) return null;
+        if(root.elem == val){
+            return helperSucc(root.right);
+        }
+        TreeNode succ = null, current = root;
+        while(current != null){
+            if(val > current.elem){
+                succ = current;
+                current = current.left;
+            }
+            else if(val < current.elem){
+                current = current.right;
+            }
+        }
+        return succ;
+    }
+    public TreeNode helperSucc(TreeNode root){
+        if(root == null) return null;
+        TreeNode temp = root;
+        while(temp.left != null){
+            temp = temp.left;
+        }
+        return temp;
+    }
+    // problem 15
+    public TreeNode inorderPredecessor(TreeNode root, int val){
+        if(root == null) return null;
+        if(root.elem == val){
+            return helperPred(root.left);
+        }
+        TreeNode pred = null, current = root;
+        while(current !=null){
+            if(val < current.elem){
+                current = current.right;
+            }
+            else{
+                pred = current;
+                current = current.left;
+            }
+        }
+        return pred;
+    }
+    public TreeNode helperPred(TreeNode root){
+        if(root == null) return null;
+        TreeNode temp = root;
+        while(temp.right !=null){
+            temp = temp.right;
+        }
+        return temp;
+    }
+    // problem 16
+    public boolean isBalanced(TreeNode root){
+        if(root == null) return true;
+        int h = Math.abs(Height(root.left) - Height(root.right));
+        return (h <= 1) && isBalanced(root.left) && isBalanced(root.right);
+    }
+    // problem 19
+    public boolean PathSum(TreeNode root, int target){
+        if(root == null) return false;
+        if(root.elem == target) return true;
+        return PathSum(root.left, target- root.elem) || PathSum(root.right, target - root.elem);
+    }
+    // problem 17
+    public TreeNode sortedArrayToBST(int[] arr, int left, int right){
+        if(left > right) return null;
+        int mid = (left + right)/2;
+        TreeNode root = new TreeNode(arr[mid]);
+        root.left = sortedArrayToBST(arr, left, mid-1);
+        root.right = sortedArrayToBST(arr, mid+1, right);
+        return root;
+    }
+    // closest to the target value
+    public int closestToTarget(TreeNode root, int val){
+        return helperC(root, val, root.elem);
+    }
+    public int helperC(TreeNode root, int val, int closest){
+        if(root == null) return -1;
+        if(Math.abs(root.elem - val) < Math.abs(root.elem - closest)){
+            closest = root.elem;
+        }
+        if(val > root.elem){
+            return helperC(root.right, val, closest);
+        }
+        if(val < root.elem){
+            return helperC(root.left, val, closest);
+        }
+        return closest;
+    }
+    // Kth smallest in a range
+    public void kThsmallestInRange(TreeNode root, int k, int c, int L, int R){
+        helperKth(root, k, 0, L, R);
+    }
+    public void helperKth(TreeNode root, int k, int c, int L, int R){
+        if(root == null) return;
+        helperC(root.left, k, c);
+        if(root.elem <=R && root.elem >= L){
+            c++;
+            if(c == k){
+                System.out.println(root.elem);
+                return;
+            }
+        }
+        helperKth(root.right, k, c, L, R);
+    }
+    // Mirror
+    public TreeNode Mirror(TreeNode root){
+        if(root == null) return null;
+        TreeNode swap = root.left;
+        root.left = root.right;
+        root.right = swap;
+
+        Mirror(root.left);
+        Mirror(root.right);
+        return root;
+    } 
+    // Binary Tree Path root to leaf path
+    public void path(TreeNode root){
+        if(root == null) return;
+        helperString(root, ""); 
+    }
+    public void helperString(TreeNode root, String path){
+        if(root == null) return;
+        String newPath;
+        if(path == "") newPath = path;
+        else newPath = path + "->" + root.elem;
+
+        if(root.left == null && root.right == null){
+            System.out.println(path + root.elem);
+            return;
+        }
+        helperString(root.left, newPath);
+        helperString(root.right, newPath);
+    }
+    // left leadf sum
+    int sum = 0;
+    public int sumLeftLead(TreeNode root){
+        helper(root);
+        return sum;
+    }
+    public void helper(TreeNode root){
+        if(root == null) return; 
+        if(root.left != null){
+            if(root.left.left == null & root.left.right== null){
+                sum += root.left.elem;
+            }
+        }
+        helper(root.left);
+        helper(root.right);
+    }
+    // average of every level of the BT
+    public void averageLevel(TreeNode root){
+        int[] levelArray = new int[Height(root)];
+        int [] count = new int[Height(root)];
+        level(root, 1, levelArray, count);
+        for(int i =0; i< levelArray.length; i++){
+            System.out.print(levelArray[i]/count[i]);
+        }
+    }
+    public void level(TreeNode root, int lvl, int[] arr, int[] c){
+        if(root == null || lvl == arr.length) return;
+
+        arr[lvl] += root.elem;
+        c[lvl] ++;
+
+        level(root.left, lvl+1, arr, c);
+        level(root.right, lvl+1, arr, c);
+
+    }
+
+    // get number of nodes in a level
+    public int getLevelNumber(TreeNode root, int lvl){
+        if(root == null) return 0;
+        if(lvl == 1) return 1;
+        return getLevelNumber(root.left, lvl-1) + getLevelNumber(root.right, lvl-1);
+    }
+
+    // subtree of another tree
+    public boolean isSubTree(TreeNode root, TreeNode subroot){
+        if(root == null && subroot == null) return true;
+        return sub(root.left, subroot) || sub(root.right, subroot);
+    }
+    public boolean sub(TreeNode r1, TreeNode r2){
+        if(r1 == null && r2 == null) return true;
+        if(r1 == null|| r2 == null) return false;
+        
+        if(r1 != null && r2 != null){
+            if(r1.elem != r2.elem){
+                return false;
+            }
+        }
+        return sub(r1.left, r2.left) && sub(r1.right, r2.right);
+    }
+    // number of path with the same target value
+    int count = 0;
+    public int NumberPath(TreeNode root, int target){
+        if(root == null) return 0;
+        path(root, target);
+        NumberPath(root.left, target);
+        NumberPath(root.right, target);
+        return c;
+    }
+    public void path(TreeNode root, int target){
+        if((root == null))return;
+        if(root.elem == target) c++;
+        path(root.left, target - root.elem);
+        path(root.right, target - root.elem);
+    }
+    // univalued BT
+    public boolean isUnivalued(TreeNode root){
+        if(root == null) return true;
+        int checker = root.elem;
+        return checker(root, checker);
+    }
+    public boolean checker(TreeNode root, int checker){
+        if(root == null) return true;
+        if(root.elem != checker){
+            return false;
+        }
+        return checker(root.left, checker) &&  checker(root.right, checker);
+    }
+
+    // The diameter 
+    ///of a binary tree is the length of the longest path between any two nodes 
+    /// in a tree. This path may or may not pass through the root.
+    int path = 0;
+    public int diameterOfBinaryTree(TreeNode root){
+        if(root == null) return 0;
+        diameter(root);
+        return path;
+    }
+    public int diameter(TreeNode root){
+       if(root == null) return 0;
+       int left = diameter(root.left);
+       int right = diameter(root.right);
+       path = Math.max(path, left + right);
+       return 1 + Math.max(left, right);
+    }
+    // longest univalued path
+    public int LongestUnivaluedPath(TreeNode root){
+        longestPath(root);
+        return path;
+    }
+    public int longestPath(TreeNode root){
+        if(root == null) return 0;
+        int left = longestPath(root.left);
+        int right = longestPath(root.right);
+        int leftPath = 0, rightPath = 0;
+        if(root.left != null && root.elem == root.left.elem){
+            leftPath = left;
+        }
+        if(root.right != null && root.elem == root.right.elem){
+            rightPath = right;
+        }
+        path = Math.max(path, leftPath + rightPath);
+        return 1 + Math.max(leftPath, rightPath);
+    }
+    //merge two binary treee withoout creating new nodes
+    public TreeNode mergeTree(TreeNode root1, TreeNode root2){
+        if(root1 == null) return root2;
+        if(root2 == null) return root1;
+        
+        root1.elem += root2.elem;
+        root1.left = mergeTree(root1.left, root2.left);
+        root1.right = mergeTree(root1.right, root2.right);
+
+        return root1;
+    }
+    // Minimum absolute difference between two nodes in BST
+    Integer prev = null;
+    int diff = Integer.MAX_VALUE;
+    public int minimumAbsDifference(TreeNode root){
+        helperMin(root);
+        return diff;
+    }
+    public void helperMin(TreeNode root){
+        if(root == null) return;
+        helperMin(root.left);
+        if(prev!=null){
+            diff = Math.min(diff, Math.abs(prev -root.elem));
+        }
+        prev = root.elem;
+        helperMin(root.right);
+    }
+// child sum
+    public boolean childSum(TreeNode root){
+        if(root == null) return true;
+        if(root.left == null && root.right == null){
+            return true;
+        }
+        int left = 0;
+        int right = 0;
+        if(root.left != null) left = root.left.elem;
+        if(root.right != null) right = root.right.elem;
+        if(root.elem != left + right) return false;
+        return childSum(root.left) && childSum(root.right);
+    }
+    // largest value at each level
+    public Integer[] largestAtLevels(TreeNode root){
+        Integer[] arr = new Integer[Height(root)];
+        largest(root, arr, 0);
+        return arr;
+    }
+    public void largest(TreeNode root, Integer[] arr, int lvl){
+        if(root == null) return;
+        if(arr[lvl] == null || arr[lvl] < root.elem){
+            arr[lvl] = root.elem;
+        }
+        largest(root.left, arr, lvl+1);
+        largest(root.right, arr, lvl+1);
+    }
+    // print all nodes that are k distance away from the root
+    public void printKthdis(TreeNode root, int k){
+        print(root,k, 0);
+    }
+    public void print(TreeNode root, int k, int lvl){
+        if(root == null) return;
+        if(lvl == k){
+            System.out.println(root.elem);
+        }
+        print(root.left, k, lvl+1);
+        print(root.right, k, lvl+1);
+    }
+// printing all ancestors
+    public void ancestors(TreeNode root, int val){
+        myHelper(root, val);
+    }
+    public boolean myHelper(TreeNode root, int target){
+        if(root == null) return false;
+        if(root.elem == target){
+            return true;
+        }
+        if(myHelper(root.left, target) || myHelper(root.right, target)){
+            System.out.println(root.elem);
+        }
+        return false;
+    }
+    // printing all nodes that have one child
+    public void OneChild(TreeNode root){
+        if(root == null) return;
+        if(root.left != null || root.right != null){
+            System.out.println(root.elem);
+        }
+        OneChild(root.right);
+        OneChild(root.left);
+    }
+    public boolean isSkew(TreeNode root){
+        if(root == null) return true;
+        if(root.left != null && root.right != null){
+            return false;
+        }
+        return isSkew(root.right) && isSkew(root.left);
+    }
+    // minimum depth
+    public int minimumDepth(TreeNode root){
+        if(root == null) return 0;
+        if(root.left == null){
+            return minimumAbsDifference(root.right);
+        }
+        if(root.right == null){
+            return minimumAbsDifference(root.left);
+        }
+        return 1 + Math.min(minimumAbsDifference(root.left), minimumAbsDifference(root.right));
+    }
+}
