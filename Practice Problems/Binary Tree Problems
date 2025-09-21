@@ -1,0 +1,372 @@
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.tree.TreeNode;
+
+public class Tree_Final{
+    // Lowest Common Ancestor BST
+
+    public BTNode LowestCommonAncestor_BST(BTNode root, BTNode p, BTNode q){
+        if(root == null) return null;
+        if((int) p.elem < (int) root.elem && (int) q.elem < (int) root.elem){
+            return LowestCommonAncestor_BST(root.left, p, q);
+        }
+        if((int) q.elem > (int) root.elem && (int) p.elem > (int) root.elem){
+            return LowestCommonAncestor_BST(root.right, p, q);
+        }
+        return root;
+    }
+
+    // Lowest Commo Ancestor Binary Tree
+    public BTNode LowestCommonAncestor_BT(BTNode root, BTNode p, BTNode q){
+        if(root == null) return null;
+        if(root == p || root == q) return root;
+        BTNode left = LowestCommonAncestor_BT(root.left, p, q);
+        BTNode right = LowestCommonAncestor_BT(root.right, p, q);
+        if(left != null && right != null){
+            return root;
+        }
+        if(left != null){
+            return left;
+        }
+        return right;
+    }
+    // range sum
+    public Integer rangeSumBST(BTNode root, int low, int high){
+        if(root == null) return 0;
+        if(low < (int)root.elem){
+            return rangeSumBST(root.left, low, high);
+        }
+        if(high > (int)root.elem){
+            rangeSumBST(root.right, low, high);
+        }
+        return (int)root.elem + rangeSumBST(root.left, low, high) + rangeSumBST(root.right, low, high);
+    }
+
+    /// Given the root of a binary tree, return the sum of every tree node's tilt.
+    /// The tilt of a tree node is the absolute difference between the sum of all left 
+    /// subtree node values and all right subtree node values. If a node does not have a left child, 
+    /// then the sum of the left subtree node values is treated as 0. The rule is similar if the node does not have a right child
+    
+    int tilt = 0;
+    public int FindTilt(BTNode root){
+        tilt(root);
+        return tilt;
+    }
+    public int tilt(BTNode root){
+        if(root == null) return 0;
+        int left = tilt(root.left);
+        int right = tilt(root.right);
+        tilt += Math.abs(left - right);
+        return (int) root.elem + left + right;
+    }
+
+    // Minimum absolute difference/distance between two values in BST
+
+    Integer prev = null;
+    int min = Integer.MAX_VALUE;
+    public int getMinAbsDifference(BTNode root){
+        getMin(root);
+        return min;
+    }
+    public void getMin(BTNode root){
+        if(root == null) return;
+        getMin(root.left);
+        if(prev != null){
+            min = Math.min(min, Math.abs(prev - (int)root.elem));
+        }
+        prev = (int)root.elem;
+        getMin(root.right);
+    }
+
+    //// You are given an integer array nums with no duplicates. A maximum binary tree can be
+    ///  built recursively from nums using the following algorithm:
+    /// Create a root node whose value is the maximum value in nums.
+    /// Recursively build the left subtree on the subarray prefix to the left of the maximum value.
+    /// Recursively build the right subtree on the subarray suffix to the right of the maximum value. 
+    /// Return the maximum binary tree built from nums.
+    
+    public BTNode constructMaximumBinaryTree(int[] arr){
+        return helper(arr, 0, arr.length);
+    }
+    public BTNode helper(int[]arr, int left, int right){
+        if(left >= right) return null;
+        int mid = FindMax(arr, left, right);
+        BTNode root = new BTNode(arr[mid]);
+        root.left = helper(arr, left, mid);
+        root.right = helper(arr, mid+1, right);
+        return root;
+    }
+    public int FindMax(int[] arr, int left, int right){
+        int max = left;
+        for(int i=left; i<right; i++){
+            if(arr[max] < arr[i]){
+                i = max;
+            }
+        }
+        return max;
+    }
+    // merge TWO BT
+
+    public BTNode mergeTwoTrees(BTNode root1, BTNode root2){
+        if(root1 == null){
+            return root2;
+        }
+        if(root2 == null){
+            return root1;
+        }
+        BTNode newNode = new BTNode( (int)root1.elem + (int)root2.elem);
+        newNode.left = mergeTwoTrees(root1.left, root2.left);
+        newNode.right = mergeTwoTrees(root1.right, root2.right);
+        return newNode;
+    }
+
+    // valid binary tree 
+    public boolean isValidBT(BTNode root){
+        return valid(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+    public boolean valid(BTNode root, int min, int max){
+        if(root == null) return true;
+        if((int)root.elem <= min || (int)root.elem >= max){
+            return false;
+        }      
+        return valid(root.left, min, (int)root.elem) && valid(root.right, (int)root.elem, max);
+    }
+
+    // Path Sum
+    public boolean PathSum(BTNode root, int target){
+        if(root == null) return false;
+        if(root.left == null && root.right == null){
+            return (int)root.elem == target;
+        }
+        return PathSum(root.left, target - (int)root.elem) || PathSum(root.right, target - (int) root.elem);
+    }
+    // count number of paths that satisfies the sum  
+    int c =0;
+    public int PathSumCount(BTNode root, int target){
+        if(root == null) return 0;
+        PathSum(root, target);
+        PathSumCount(root.left, target);
+        PathSumCount(root.right, target);
+        return c;
+    }
+    public void helperSum(BTNode root, int target){
+        if(root == null) return;
+        if(root.left == null && root.right== null){
+            if(target == (int) root.elem){
+                c++;
+            }
+        }
+        helperSum(root.left, target - (int) root.elem);
+        helperSum(root.right, target - (int) root.elem);
+    }
+    // leaf similar BT
+
+    public boolean leafSimilar(BTNode root1, BTNode root2){
+        String left = helper(root1, "");
+        String right = helper(root2, "");
+        return left.equals(right);
+    }
+    public String helper(BTNode root, String path){
+        if(root == null) return "";
+        if(root.left == null && root.right == null){
+            return path + root.elem + ", ";
+        }
+        return helper(root.left, path) + helper(root.right, path);
+    }
+    // subtree of a Binary Tree
+    public boolean isSubTree(BTNode root, BTNode sub){
+        if(root == null && sub == null) return true;
+        return isIdentical(root.left, sub) || isIdentical(root.right, sub);
+    }
+    public boolean isIdentical(BTNode r1, BTNode r2){
+        if(r1== null && r2 == null){
+            return true;
+        }
+        if(r1.elem != r2.elem){
+            return false;
+        }
+        return isIdentical(r1.left, r2.left) && isIdentical(r1.right, r2.right);
+    }
+    // KthSmallest element
+    int counter = 1, temp = 0;
+    public int KthSmallest(BTNode root, int k){
+        smallest(root, k);
+        return temp;
+    }
+    public void smallest(BTNode root, int k){
+        if(root == null) return;
+        smallest(root.left, k);
+        if( counter == k) temp = (int)root.elem;
+        counter ++;
+        smallest(root.right, k);
+    }
+    // average node in every level
+    int[] sum;
+    int [] count;
+    public double[] avergeInLevel(BTNode root){
+        sum = new int[height(root)];
+        count = new int[height(root)];
+        double[] avg = new double[height(root)];
+        helper(root, 0);
+        for(int i=0; i<avg.length; i++){
+            avg[i] = (double) sum[i]/count[i];
+        }
+        return avg;
+    }
+    public void helper(BTNode root, int level){
+        if(root == null) return;
+        sum[level] += (int) root.elem;
+        count[level]++;
+
+        helper(root.left, level+1);
+        helper(root.right, level + 1);
+    }
+    public int height(BTNode root){
+        if(root == null) return 0;
+        int left = height(root.left);
+        int right = height(root.right);
+        return 1 + Math.max(left, right);
+    }
+    // univalued tree
+    public boolean isUnivaluedTree(BTNode root){
+        return helperU(root, (int)root.elem);
+    }
+    public boolean helperU(BTNode root, int checker){
+        if(root == null) return true;
+        if((int)root.elem != checker){
+            return false;
+        }
+        return helperU(root.left, checker) && helperU(root.right, checker);
+    }
+    // Longest Univalued Path
+    int path = 0;
+    public int longestunivaluedpath(BTNode root){
+        if(root == null) return -1;
+        path(root);
+        return path;
+    }
+    public int path(BTNode root){
+        if(root == null) return 0;
+        int left = path(root.left);
+        int right = path(root.right);
+        int leftPath = 0, rightPath = 0;
+        if(root.left != null && root.elem == root.left.elem){
+            leftPath = left;
+        }
+        if(root.right != null && root.elem == root.right.elem){
+            rightPath = right;
+        }
+        path = Math.max(path, leftPath + rightPath);
+        return 1 + Math.max(leftPath, rightPath);
+    }
+
+    // Maximum Path sum
+    int max = Integer.MIN_VALUE;
+    public int MaximumPathSum(BTNode root){
+        MaxSum(root);
+        return max;
+    }
+    public int MaxSum(BTNode root){
+        if(root == null) return 0;
+        int left = Math.max(0, MaxSum(root.left));
+        int right = Math.max(0, MaxSum(root.right));
+        max = Math.max(max, left + right + (int)root.elem);
+        return (int)root.elem + Math.max(left, right);
+
+    }
+    // Diamater of a binary tree
+    int d = Integer.MIN_VALUE;
+    public int DiamaterBT(BTNode root){
+        helper(root);
+        return d;
+    }
+    public int helper(BTNode root){
+        if(root == null) return 0;
+        int left = helper(root.left);
+        int right = helper(root.right);
+        d = Math.max(d, left + right);
+        return 1 + Math.max(left, right);
+    }
+    // Symmetric BT
+     public boolean isSymmetric(BTNode root) {
+        if(root == null)return true;
+        return helper(root.left, root.right);
+    }
+    public boolean helper(BTNode r1, BTNode r2){
+        if(r1 == null && r2 == null) return true;
+        if(r1 == null || r2 == null) return false;
+        if(r1.elem != r2.elem){
+            return false;
+        }
+        return helper(r1.left, r2.right) && helper(r1.right, r2.left);
+    }
+    // sum of all leaf nodes
+    int leaf = 0;
+    public int LeafSum(BTNode root){
+        if(root == null) return 0;
+        sum(root);
+        return leaf;
+    }
+    public void sum(BTNode root){
+        if(root == null) return;
+        if(root.left!= null && root.right != null){
+            leaf += (int)root.elem;
+        }
+        sum(root.left);
+        sum(root.right);
+    }
+    // Number not found
+    public String FindPath(BTNode root, int target){
+        if(root == null) return "No Path Found";
+        if(target < (int) root.elem){
+            String str = FindPath(root.left, target);
+            if(str.equals("No Path Found")){
+                return str;
+            }
+            return root.elem + " " + str;
+        }
+        if(target > (int) root.elem){
+            String str = FindPath(root.right, target);
+            if(str.equals("No Path Found")){
+                return str;
+            }
+            return root.elem + " " + str;
+        }
+        return root.elem + "";
+    }
+    // is Valid Key
+    public boolean isValid_Key(BTNode root, String key){
+        if(root == null) return false;
+        return helper(root, key, "");
+    }
+    public boolean helper(BTNode root, String key, String path){
+        if(root == null){
+            return false;
+        }
+        path += root.elem;
+        if(root.left == null && root.right == null){
+            return key.equals(path);
+        }
+        return helper(root.left, key, path) || helper(root.right, key, path);       
+    }
+    // All Paths in BT
+    public List<String> binaryTreePaths(BTNode root) {
+        List<String> str = new ArrayList<String>();
+        if(root == null) return null;
+        helper(root, "", str);
+        return str;
+    }
+    public void helper(BTNode root, String path, List<String> str){
+        if(root.left == null && root.right ==null){
+            str.add(path + root.elem);
+            return;
+        }
+        if(root.left != null){
+            helper(root.left, path + root.elem +"->", str);
+        }
+        if(root.right != null){
+            helper(root.right, path + root.elem + "->", str);
+        }
+    } 
+}
